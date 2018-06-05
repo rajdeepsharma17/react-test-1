@@ -1,18 +1,38 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import UsernameForm from './components/UsernameForm'
 import './App.css';
 
 class App extends Component {
+
+  constructor() {
+        super()
+        this.state = {
+          currentUsername: '',
+        }
+        this.onUsernameSubmitted = this.onUsernameSubmitted.bind(this)
+      }
+    
+      onUsernameSubmitted(username) {
+        fetch('http://localhost:3001/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username }),
+        })
+          .then(response => {
+            this.setState({
+              currentUsername: username
+            })
+          })
+          .catch(error => console.error('error', error))
+      }
+    
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <h1>Chatly</h1>
+        <UsernameForm onSubmit={this.onUsernameSubmitted}/>
       </div>
     );
   }
